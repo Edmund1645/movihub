@@ -1,6 +1,6 @@
 <template>
   <div class="poster">
-    <img :src="movie.Poster" :alt="`poster of ${movie.Title}`" />
+    <img :src="movie.Poster" :alt="`poster of ${movie.Title}`" style="width: 100%" />
     <div class="meta-data">
       <h3>{{movie.Title}}</h3>
       <h4>{{movie.Year}}</h4>
