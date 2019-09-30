@@ -1,12 +1,28 @@
 <template>
-  <div>
+  <div class="transition-wrapper">
     <div id="top-section">
       <p @click="$router.go(-1)">&larr;</p>
     </div>
-
+    <span class="error">{{error}}</span>
     <div class="container" id="movie">
+      <div class="vld-parent">
+        <Loading
+          :active.sync="isLoading"
+          :is-full-page="fullPage"
+          :loader="'bars'"
+          :opacity="1"
+          :background-color="'#001f52'"
+          :color="'#ff3e3e'"
+        ></Loading>
+      </div>
       <div class="content">
-        <img class="poster" :src="movie.Poster" :alt="`poster of ${movie.Title}`" />
+        <img
+          v-if="movie.Poster !== 'N/A'"
+          class="poster"
+          :src="movie.Poster"
+          :alt="`poster of ${movie.Title}`"
+        />
+        <p v-else>No poster available</p>
         <div class="meta">
           <p>
             <strong>Title</strong>
@@ -67,6 +83,9 @@ export default {
   props: ['id'],
   data() {
     return {
+      error: '',
+      isLoading: false,
+      fullPage: true,
       movie: {}
     };
   },
@@ -87,13 +106,15 @@ export default {
         let movie = storeHas;
         vm.movie = movie;
       } else {
+        vm.isLoading = true;
         axios
           .get(`https://www.omdbapi.com/?i=${to.params.id}&plot=full&apikey=${process.env.VUE_APP_OMDB_API_KEY}`)
           .then(movie => {
             vm.$store.commit('place_views', movie.data);
             vm.retreiveMovie = movie.data;
+            vm.isLoading = false;
           })
-          .catch(err => console.log(err));
+          .catch(err => (vm.error = "something's wrong, try again"));
       }
     });
   }

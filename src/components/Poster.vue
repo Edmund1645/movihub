@@ -3,7 +3,13 @@
     class="poster"
     @click="$router.push({ name: 'movie', params: { id: movie.imdbID }, id: movie.imdbID })"
   >
-    <img :src="movie.Poster" :alt="`poster of ${movie.Title}`" style="width: 100%" />
+    <img
+      v-if="movie.Poster !== 'N/A'"
+      :src="movie.Poster"
+      :alt="`poster of ${movie.Title}`"
+      style="width: 100%"
+    />
+    <p v-else>No poster available</p>
     <div class="meta-data">
       <h3>{{movie.Title}}</h3>
       <h4>{{movie.Year}}</h4>
@@ -25,7 +31,7 @@ export default {
 
 <style scoped>
 .poster {
-  width: 300px;
+  width: 200px;
   margin: auto;
   background: #062d6d;
   border-radius: 4px;
@@ -33,5 +39,9 @@ export default {
 }
 .poster .meta-data {
   padding: 0.5rem 1.2rem;
+}
+.meta-data * {
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 </style>

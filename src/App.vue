@@ -51,6 +51,7 @@ body {
   border-radius: 7px;
   overflow: auto;
   padding: 1rem 1rem;
+  position: relative;
 }
 .text-center {
   text-align: center;
@@ -74,12 +75,12 @@ body {
 }
 .child-view {
   position: absolute;
-  left: 3.5%;
+  width: 100%;
+  left: 0;
+
   transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
 }
-.child-view > * {
-  position: relative;
-}
+
 .slide-left-enter,
 .slide-right-leave-active {
   opacity: 0;
