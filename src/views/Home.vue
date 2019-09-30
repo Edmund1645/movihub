@@ -1,17 +1,33 @@
 <template>
-  <div id="home">
+  <div class="container" id="home">
     <h2 class="text-center space-top">Search for your movie</h2>
     <p class="text-center">
       <em>*click a movie card to see details about it</em>
     </p>
     <div id="search-field">
-      <input v-model="title" @keyup.enter="getContent" id="search" type="text" placeholder="Enter Movie Title" />
+      <input
+        v-model="title"
+        @keyup.enter="getContent"
+        id="search"
+        type="text"
+        placeholder="Enter Movie Title"
+      />
       <button id="search-button" @click="getContent">Search</button>
+      <br />
+      <button id="clear-button" @click="clearContent">Clear Searches</button>
     </div>
     <span class="error"></span>
     <div class="results">
       <div class="space-top" v-for="(result,index) in results" :key="index">
         <Poster :movie="result"></Poster>
+      </div>
+    </div>
+    <hr />
+    <h2>Your Views: {{views.length}}</h2>
+    <button id="views-clear-button" @click="clearViews">Clear Views</button>
+    <div class="results">
+      <div class="space-top" v-for="(view, index) in views" :key="index">
+        <Poster :movie="view"></Poster>
       </div>
     </div>
   </div>
@@ -36,17 +52,26 @@ export default {
       if (this.title !== '') {
         document.querySelector('.error').textContent = '';
         axios
-          .get(`https://www.omdbapi.com/?s=${this.title}&apikey=${process.env.VUE_APP_OMDB_API_KEY}`)
+          .get(`https://www.omdbapi.com/?s=${this.title.trim()}&apikey=${process.env.VUE_APP_OMDB_API_KEY}`)
           .then(search => this.$store.commit('place_searches', JSON.parse(search.request.response).Search))
           .catch(err => console.error(err));
       } else {
-        document.querySelector('.error').textContent = 'Enter a title first!';
+        document.querySelector('.error').textContent = 'Enter a movie title first!';
       }
+    },
+    clearContent() {
+      this.$store.commit('clear_searches', []);
+    },
+    clearViews() {
+      this.$store.commit('clear_views', []);
     }
   },
   computed: {
     results() {
       return this.$store.getters.get_searches;
+    },
+    views() {
+      return this.$store.getters.get_views;
     }
   }
 };
@@ -56,23 +81,37 @@ export default {
 #search-field {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  height: 50px;
 }
 #search {
   padding: 0.4rem;
   width: 250px;
   border-radius: 4px;
   border: none;
+  height: max-content;
+  margin-bottom: 15px;
 }
-#search-button {
+#search-button,
+#clear-button {
   margin-left: 1rem;
   padding: 0.4rem;
   border-radius: 4px;
   border: none;
+  height: max-content;
+  margin-bottom: 15px;
+}
+#views-clear-button {
+  padding: 0.4rem;
+  border-radius: 4px;
+  border: none;
+  margin-bottom: 15px;
 }
 .results {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  min-height: 300px;
 }
 .results * {
   margin-left: 4rem;

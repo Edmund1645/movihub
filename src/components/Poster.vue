@@ -1,5 +1,8 @@
 <template>
-  <div class="poster">
+  <div
+    class="poster"
+    @click="$router.push({ name: 'movie', params: { id: movie.imdbID }, id: movie.imdbID })"
+  >
     <img :src="movie.Poster" :alt="`poster of ${movie.Title}`" style="width: 100%" />
     <div class="meta-data">
       <h3>{{movie.Title}}</h3>
