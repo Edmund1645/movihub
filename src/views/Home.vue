@@ -16,7 +16,7 @@
       <br />
       <button id="clear-button" @click="clearContent">Clear Searches</button>
     </div>
-    <span class="error"></span>
+    <span class="error">{{error}}</span>
     <div class="results">
       <div class="space-top" v-for="(result,index) in results" :key="index">
         <Poster :movie="result"></Poster>
@@ -44,7 +44,8 @@ export default {
   },
   data() {
     return {
-      title: ''
+      title: '',
+      error: ''
     };
   },
   methods: {
@@ -54,7 +55,7 @@ export default {
         axios
           .get(`https://www.omdbapi.com/?s=${this.title.trim()}&apikey=${process.env.VUE_APP_OMDB_API_KEY}`)
           .then(search => this.$store.commit('place_searches', JSON.parse(search.request.response).Search))
-          .catch(err => console.error(err));
+          .catch(err => (this.error = "something's wrong, try again"));
       } else {
         document.querySelector('.error').textContent = 'Enter a movie title first!';
       }
